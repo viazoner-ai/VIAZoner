@@ -1,0 +1,5 @@
+{
+  "name": "GardenDreamer AI",
+  "description": "A high-end garden design assistant that uses Gemini AI to generate customized landscape layouts, plant suggestions, and visual renders. Edit your garden designs in real-time using natural language commands.",
+  "requestFramePermissions": []
+}
