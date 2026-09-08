@@ -1,0 +1,11 @@
+{
+  "name": "volonterby-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "API сервер volonter.by (Node.js + SQLite, схема совместима с MySQL)",
+  "scripts": {
+    "dev": "node server.js",
+    "seed": "node seed.js"
+  }
+}
