@@ -1,34 +1,80 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GardenDreamer AI</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>volonter.by — помоги рядом</title>
+    <meta name="description" content="Платформа волонтёрской помощи в Беларуси. Оставьте заявку на помощь или найдите, где помочь рядом. Заявки с датами, отклики волонтёров, рейтинг и история помощи." />
+    <meta name="theme-color" content="#ea580c" />
+    <link rel="icon" href="/icons/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' },
+                    },
+                    boxShadow: {
+                        card: '0 1px 2px rgba(28,25,23,.05), 0 8px 24px -12px rgba(28,25,23,.12)',
+                    },
+                },
+            },
+        };
+    </script>
     <style>
+        html, body { margin: 0; padding: 0; overscroll-behavior-y: none; }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #fff7ed;
+            color: #1c1917;
+            -webkit-font-smoothing: antialiased;
         }
-        .font-serif {
-            font-family: 'Playfair Display', serif;
+        .font-display { font-family: 'Unbounded', 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: #fed7aa; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #fdba74; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; }
+        @keyframes slideUp { from { transform: translateY(26px); opacity: .4 } to { transform: translateY(0); opacity: 1 } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-12px) scale(.96) } to { opacity: 1; transform: translateY(0) scale(1) } }
+        .anim-in { animation: fadeIn .3s ease both; }
+        .pt-safe { padding-top: env(safe-area-inset-top); }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        #boot {
+            position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(160deg, #fff7ed 0%, #ffedd5 55%, #ffedd5 100%);
+            z-index: 9999; transition: opacity .35s ease;
         }
+        #boot.gone { opacity: 0; pointer-events: none; }
+        #boot .mark { width: 72px; height: 72px; border-radius: 22px; background: #ea580c; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; box-shadow: 0 16px 40px -12px rgba(234,88,12,.55); animation: pop .5s ease; }
+        @keyframes pop { 0% { transform: scale(.6); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+        #boot .p { color: #9a3412; font-weight: 600; letter-spacing: .02em; }
+        #boot .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:#ea580c; margin:0 2px; animation: blink 1s infinite; }
+        #boot .dot:nth-child(2){ animation-delay:.2s } #boot .dot:nth-child(3){ animation-delay:.4s }
+        @keyframes blink { 0%,100%{opacity:.2} 50%{opacity:1} }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
-  }
-}
-</script>
 </head>
 <body>
+    <div id="boot">
+        <div style="text-align:center">
+            <div class="mark">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 21s-7.5-4.7-9.8-9C.6 8.6 2.6 5 6.2 5c2 0 3.6 1 4.8 2.6h2c1.2-1.6 2.8-2.6 4.8-2.6 3.6 0 5.6 3.6 4 7-2.3 4.3-9.8 9-9.8 9z"/>
+                    <path d="M12 7.6c.5-.5 1.2-.8 2-.8 2 0 3 1.6 2.2 3.4-1 2.1-4.2 4.2-4.2 4.2s-3.2-2.1-4.2-4.2C6 8.4 7 6.8 9 6.8c.8 0 1.5.3 2 .8h1z" fill="#ffffff" stroke="none"/>
+                </svg>
+            </div>
+            <div class="p">volonter.by <span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+    </div>
     <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
